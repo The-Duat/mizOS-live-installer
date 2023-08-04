@@ -1,0 +1,40 @@
+#!/bin/bash
+
+
+# Introduction
+echo "[----mizOS System Installer----]"
+echo -e -n "\nThis installer will walk you through the mizOS installation process.\n\nPlease verify that your BIOS is set to boot in UEFI mode before continuing.\n\nType \"97\" to continue, hit enter to terminate installation.\n\n> "
+read ans
+if [ "$ans" != "97" ]; then
+	echo "Installation terminated."
+	exit
+fi
+
+
+
+
+
+# Partitioning disks
+clear
+echo -e "Current disk layout:\n"
+lsblk
+echo -e -n "\nPlease input the drive (not partiton!!!) you want to install mizOS onto. (e.x. sda, nvme0n1)\n\n> "
+read basedrive
+echo -e -n "\nIs \"$basedrive\" the drive you want to install to? (y/n)\n> "
+read ans
+if [ "$ans" != "y" ]; then
+	echo "Drive disagreement. Installation terminated."
+	exit
+fi
+clear
+echo -e "The mizOS installer will now walk you through partitioning your disk."
+echo -e "\nmizOS needs at least 2 partitions to install:"
+echo -e "   - Boot partition | Recommended size: 512MiB - 1024MiB"
+echo -e "   - Root partition | Recommended size: 30GiB or greater."
+echo -e "   - Swap partition | Recommended size: Same as RAM or greater."
+echo -e "     (swap is optional)"
+echo -e "\nThe mizOS installer does not currently support the creation of a seperate /home partition."
+echo -e "\n - ONLY if it doesn't exist already, please create a Boot partiton of type EFI."
+echo -e " - Create a Root partiton of type \"Linux\""
+echo -e " - Optionally, create a partition for swap"
+echo -e ""
