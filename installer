@@ -16,8 +16,11 @@ fi
 
 # Partitioning disks
 clear
+echo -e "[ Partitioning disks ]\n"
+
 echo -e "Current disk layout:\n"
 lsblk
+
 echo -e -n "\nPlease input the drive (not partiton!!!) you want to install mizOS onto. (e.x. sda, nvme0n1)\n\n> "
 read basedrive
 echo -e -n "\nIs \"$basedrive\" the drive you want to install to? (y/n)\n> "
@@ -27,14 +30,120 @@ if [ "$ans" != "y" ]; then
 	exit
 fi
 clear
+
 echo -e "The mizOS installer will now walk you through partitioning your disk."
 echo -e "\nmizOS needs at least 2 partitions to install:"
-echo -e "   - Boot partition | Recommended size: 512MiB - 1024MiB"
-echo -e "   - Root partition | Recommended size: 30GiB or greater."
-echo -e "   - Swap partition | Recommended size: Same as RAM or greater."
-echo -e "     (swap is optional)"
+echo -e "   ||>- Boot partition | Recommended size: 512MiB - 1024MiB"
+echo -e "   ||>- Root partition | Recommended size: 30GiB or greater."
+echo -e "      - Swap partition | Recommended size: Same as RAM or greater."
+echo -e "        (swap is optional)"
 echo -e "\nThe mizOS installer does not currently support the creation of a seperate /home partition."
 echo -e "\n - ONLY if it doesn't exist already, please create a Boot partiton of type EFI."
 echo -e " - Create a Root partiton of type \"Linux\""
-echo -e " - Optionally, create a partition for swap"
-echo -e ""
+echo -e " - Optionally, create a partition for swap."
+echo -e "\n| If you have already partitioned your disks, type \"x\""
+echo -e "| If you need to partition your disks, type \"cfdisk\" to launch a disk partitioning utility."
+echo -e "!! Warning !! Disk partitioning may delete data, or leave your current operating system in an inoperable state if done correctly."
+
+while true; do
+	echo -e -n "\n> "
+	read ans
+	if [ "$ans" = "x" ]; then
+		break
+	elif [ "$ans" = "cfdisk" ]; then
+		cfdisk /dev/$basedrive
+		break
+	fi
+done
+
+
+
+
+
+# Selecting partitions
+clear
+
+echo -e "[ Selecting partitions - Boot ]\n"
+lsblk
+
+while true; do
+	echo -e -n "\nPlease enter the partition to use for Boot (e.x. sda1, nvme0n1p1)\n\n> "
+	read BOOTPART
+	echo -e -n "\n\nIs $BOOTPART (/dev/$BOOTPART) correct? (y/n)\n\n> "
+	read ans
+	if [ "$ans" = "y" ]; then
+		break
+	fi
+done
+
+
+clear
+
+echo -e "[ Selecting partitions - Root ]\n"
+lsblk
+
+while true; do
+	echo -e -n "\nPlease enter the partition to use for Root (e.x. sda2, nvme0n1p2)\n\n> "
+	read ROOTPART
+	echo -e -n "\n\nIs $ROOTPART (/dev/$ROOTPART) correct? (y/n)\n\n> "
+	read ans
+	if [ "$ans" = "y" ]; then
+		break
+	fi
+done
+
+
+clear
+
+echo -e "[ Selecting partitions - Swap ]\n"
+lsblk
+
+while true; do
+	echo -e "\nPlease enter the partition to use for Swap (e.x. sda3, nvme0n1p3)"
+	echo -e -n "If you have decided to do without a swap partition, enter \"x\".\n\n> "
+	read SWAPPART
+	if [ "$SWAPPART" = "x" ]; then
+		NOSWAP=1
+		break
+	fi
+	echo -e -n "\n\nIs $SWAPPART (/dev/$SWAPPART) correct? (y/n)\n\n> "
+	read ans
+	if [ "$ans" = "y" ]; then
+		break
+	fi
+done
+
+
+
+
+
+# The Final Interaction
+clear
+echo -e "[ Our final moments together... ]\n\n"
+lsblk
+echo -e "\nSelected Boot partition: /dev/$BOOTPART"
+echo "Selected Root partition:      /dev/$ROOTPART"
+if [ $NOSWAP = 1 ]; then
+	echo "No swap partition has been selected."
+else
+	echo "Selected Swap partition:      /dev/$SWAPPART"
+fi
+
+echo -e "\n\nThese are our final moments together for a while. I need you to verify that the above information is correct before proceeding."
+
+echo -e -n "\nProceed? This action is irreversible. (y/n)"
+while true; do
+	echo -e -n "\n\n> "
+	read ans
+	if [ "$ans" = "y" ]; then
+		break
+	fi
+done
+
+clear
+
+echo "Installation will start in "
+for (( i=10; i>=1; i-- )); do
+	echo "$i"
+	sleep 1
+done
