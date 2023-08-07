@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -e
 
 # Introduction
 echo "[----mizOS System Installer----]"
@@ -72,6 +72,11 @@ while true; do
 	echo -e -n "\n\nIs $BOOTPART (/dev/$BOOTPART) correct? (y/n)\n\n> "
 	read ans
 	if [ "$ans" = "y" ]; then
+		echo -e "\nWill you be reformatting this partiton? Reformatting the Boot partition could destroy the bootloaders of other installed operating systems. (y/n)"
+		read ans
+		if [ "$ans" = "y" ]; then
+			DELBOOT=1
+		fi
 		break
 	fi
 done
@@ -122,11 +127,16 @@ clear
 echo -e "[ Our final moments together... ]\n\n"
 lsblk
 echo -e "\nSelected Boot partition: /dev/$BOOTPART"
-echo "Selected Root partition:      /dev/$ROOTPART"
+echo "Selected Root partition: /dev/$ROOTPART"
 if [ $NOSWAP = 1 ]; then
 	echo "No swap partition has been selected."
 else
-	echo "Selected Swap partition:      /dev/$SWAPPART"
+	echo "Selected Swap partition: /dev/$SWAPPART"
+fi
+if [ $DELBOOT = 1 ]; then
+	echo -e "\nBoot partiton will be reformatted."
+else
+	echo -e "\nBoot partition will not be reformatted."
 fi
 
 echo -e "\n\nThese are our final moments together for a while. I need you to verify that the above information is correct before proceeding."
@@ -147,3 +157,59 @@ for (( i=10; i>=1; i-- )); do
 	echo "$i"
 	sleep 1
 done
+
+
+
+
+
+# Formatting partitions.
+clear
+echo "[ Formatting partitions ]"
+echo "This may take a while."
+
+echo -e "\nFormatting Root (/dev/$ROOTPART) as ext4."
+mkfs.ext4 /dev/$ROOTPART
+
+if [ $DELBOOT = 1 ]; then
+	echo "Formatting Boot (/dev/$BOOTPART) as fat32."
+	mkfs.fat -F 32 /dev/$BOOTPART
+fi
+
+if [ $NOSWAP != 1 ]; then
+	echo "Initializing Swap partition (/dev/$SWAPPART)"
+	mkswap /dev/$SWAPPART
+fi
+
+
+
+
+
+# Preparing installation.
+clear
+echo "[ Preparing installation ]"
+echo -e "\n\nMounting Root partition (/dev/$ROOTPART) to /mnt"
+mount /dev/$ROOTPART /mnt
+echo "Creating /mnt/boot"
+mkdir /mnt/boot
+echo "Mounting Boot partition (/dev/$BOOTPART) to /mnt/boot"
+mount /dev/$BOOTPART /mnt/boot
+if [ $NOSWAP != 1 ]; then
+	echo "Enabling swap."
+	swapon /dev/$SWAPPART
+fi
+
+
+
+
+
+# Installing base system software
+clear
+echo "[ Installing base system software ]"
+echo -e "\n\nInstalling \"base\", \"linux\", and \"linux-firmware\""
+pacstrap -K /mnt base linux linux-firmware
+
+echo -e "\n\nGenerating fstab."
+genfstab -U /mnt >> /mnt/etc/fstab
+
+echo -e "\n\nChanging root to new system."
+arch-chroot /mnt
