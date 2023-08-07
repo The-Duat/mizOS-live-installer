@@ -213,3 +213,10 @@ genfstab -U /mnt >> /mnt/etc/fstab
 
 echo -e "\n\nChanging root to new system."
 arch-chroot /mnt
+
+
+
+
+
+# Timezone selection
+echo "[ Timezone selection ]"
