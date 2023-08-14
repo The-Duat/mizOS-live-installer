@@ -242,3 +242,5 @@ done
 
 echo -e "\nSetting timezone to $REGION/$CITY"
 ln -sf /usr/share/zoneinfo/$REGION/$CITY /etc/localtime
+echo "Generating /etc/adjtime"
+hwclock --systohc
