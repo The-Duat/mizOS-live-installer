@@ -286,7 +286,7 @@ done
 
 echo -e "\n\nPlease enter the password to use for the Root account."
 passwd
-echo -e "\n\nPlease enter a username for a normal user."
+echo -e "\n\nPlease enter a username for the normal non-root user."
 echo -n "This user will be a sudoer. You can create more users after installation."
 while true; do
 	echo -e -n "\n\n> "
@@ -320,6 +320,41 @@ grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
 
 
 
+# Graphics Drivers
+clear
+echo "[ Graphics Drivers ]"
+while true; do
+	echo -e "\nPlease select which graphics drivers to install:"
+	echo "   1. (AMD) Radeon"
+	echo "   2. (AMD) AMDVLK"
+	echo "   3. (Intel) Intel"
+	echo "   4. (Nvidia) Nvidia Proprietary"
+	echo "   5. (Nvidia) Nvidia Nouveau"
+	echo -e -n "\n> "
+	read driver
+
+	if [ $driver == "1" ]; then
+		pacman -S mesa lib32-mesa xf86-video-amdgpu vulkan-radeon lib32-vulkan-radeon libva-mesa-driver lib32-libva-mesa-driver mesa-vdpau lib32-mesa-vdpau
+		break
+	elif [ $driver == "2" ]; then
+		pacman -S mesa lib32-mesa xf86-video-amdgpu amdvlk lib32-amdvlk libva-mesa-driver lib32-libva-mesa-driver mesa-vdpau lib32-mesa-vdpau
+		break
+	elif [ $driver == "3" ]; then
+		pacman -S mesa lib32-mesa xf86-video-intel vulkan-intel lib32-vulkan-intel
+		break
+	elif [ $driver == "4" ]; then
+		pacman -S nvidia lib32-nvidia-utils
+		break
+	elif [ $driver == "5" ]; then
+		pacman -S mesa lib32-mesa xf86-video-nouveau
+		break
+	fi
+done
+
+
+
+
+
 # mizOS system overwrite
 clear
 echo "[ mizOS System Overwrite ]"
@@ -331,7 +366,7 @@ su $USERNAME
 cd ~
 mkdir installer
 cd installer
-git clone https://github.com/mizosu97/mizos
+git clone https://github.com/the-duat/mizos
 cd mizos
 sudo chmod +x install
 ./install
