@@ -232,6 +232,7 @@ while true; do
 	ls /usr/share/zoneinfo
 	echo -e -n "\n> "
 	read REGION <$(tty)
+	echo "Selected region: $REGION ."
 	if [ -d "/usr/share/zoneinfo/$REGION" ]; then
 		break
 	fi
@@ -240,7 +241,9 @@ done
 while true; do
 	echo -e "\n\nPlease select your correspondong city:\n"
 	ls /usr/share/zoneinfo/$REGION
+	echo -e -n "\n> "
 	read CITY <$(tty)
+	echo "Selected city: $CITY ."
 	if [ -f "/usr/share/zoneinfo/$REGION/$CITY" ]; then
 		break
 	fi
