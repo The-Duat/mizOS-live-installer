@@ -325,11 +325,12 @@ clear
 echo "[ Graphics Drivers ]"
 while true; do
 	echo -e "\nPlease select which graphics drivers to install:"
-	echo "   1. (AMD) Radeon"
-	echo "   2. (AMD) AMDVLK"
-	echo "   3. (Intel) Intel"
-	echo "   4. (Nvidia) Nvidia Proprietary"
-	echo "   5. (Nvidia) Nvidia Nouveau"
+	echo "   1.     (AMD) Radeon"
+	echo "   2.     (AMD) AMDVLK"
+	echo "   3.   (Intel) Intel"
+	echo "   4.  (Nvidia) Nvidia Proprietary"
+	echo "   5.  (Nvidia) Nvidia Nouveau"
+	echo "   6.      (VM) QXL"
 	echo -e -n "\n> "
 	read driver
 
@@ -347,6 +348,9 @@ while true; do
 		break
 	elif [ $driver == "5" ]; then
 		pacman -S mesa lib32-mesa xf86-video-nouveau
+		break
+	elif [ $driver == "6" ]; then
+		pacman -S mesa xf86-video-qxl
 		break
 	fi
 done
