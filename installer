@@ -381,5 +381,5 @@ EOF
 
 mv installer2 /mnt/root
 arch-chroot /mnt /bin/bash <<EOF
-cd / && chmod 777 installer2 && ./installer
+cd /root && chmod 777 installer2 && ./installer
 EOF
