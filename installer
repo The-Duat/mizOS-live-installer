@@ -2,6 +2,7 @@
 set -e
 
 # Introduction
+clear
 echo "[----mizOS System Installer----]"
 echo -e -n "\nThis installer will walk you through the mizOS installation process.\n\nPlease verify that your BIOS is set to boot in UEFI mode before continuing.\n\nType \"97\" to continue, hit enter to terminate installation.\n\n> "
 read ans
@@ -211,8 +212,10 @@ pacstrap -K /mnt base linux linux-firmware
 echo -e "\n\nGenerating fstab."
 genfstab -U /mnt >> /mnt/etc/fstab
 
+
 echo -e "\n\nChanging root to new system."
-arch-chroot /mnt /bin/bash <<EOF
+# arch-chroot /mnt /bin/bash <<EOF
+cat << EOF > installer2
 echo -e "\nInstalling needed system software."
 pacman -S grub efibootmgr gcc lua git make
 
@@ -374,4 +377,9 @@ git clone https://github.com/the-duat/mizos
 cd mizos
 sudo chmod +x install
 ./install
+EOF
+
+mv installer2 /mnt/root
+arch-chroot /mnt /bin/bash <<EOF
+cd / && chmod 777 installer2 && ./installer
 EOF
