@@ -212,7 +212,7 @@ echo -e "\n\nGenerating fstab."
 genfstab -U /mnt >> /mnt/etc/fstab
 
 echo -e "\n\nChanging root to new system."
-arch-chroot /mnt
+arch-chroot /mnt /bin/bash <<EOF
 echo -e "\nInstalling needed system software."
 pacman -S grub efibootmgr gcc lua git make
 
@@ -374,3 +374,4 @@ git clone https://github.com/the-duat/mizos
 cd mizos
 sudo chmod +x install
 ./install
+EOF
