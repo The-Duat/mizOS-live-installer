@@ -207,7 +207,7 @@ fi
 clear
 echo "[ Installing base system software ]"
 echo -e "\n\nInstalling \"base\", \"linux\", and \"linux-firmware\""
-pacstrap -K /mnt base linux linux-firmware
+pacstrap -K /mnt base linux linux-firmware lua
 
 echo -e "\n\nGenerating fstab."
 genfstab -U /mnt >> /mnt/etc/fstab
@@ -216,7 +216,7 @@ genfstab -U /mnt >> /mnt/etc/fstab
 echo -e "\n\nChanging root to new system."
 # arch-chroot /mnt /bin/bash <<EOF
 cat << EOF > installer2
-#! /bin/lua
+#!/bin/lua
 
 -- Timezone selection
 os.execute("clear")
