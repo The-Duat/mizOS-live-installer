@@ -227,6 +227,7 @@ while true do
   print("\n\nPlease select your timezone region:\n")
   os.execute("ls /usr/share/zoneinfo")
   local handle = io.popen("ls /usr/share/zoneinfo")
+  io.write("\n> ")
   REGION = io.read()
   handle:close()
   print("Selected region: " .. REGION)
@@ -242,6 +243,7 @@ while true do
   print("\n\nPlease select your corresponding city:\n")
   os.execute("ls /usr/share/zoneinfo/" .. REGION)
   local handle = io.popen("ls /usr/share/zoneinfo/" .. REGION)
+  io.write("\n> ")
   CITY = io.read()
   handle:close()
   print("Selected city: " .. CITY)
@@ -359,6 +361,6 @@ os.execute("su " .. USERNAME .. " -c \"cd ~ && mkdir installer && cd installer &
 EOF
 
 mv installer2 /mnt/root
-echo "\n\nPlease enter the following command to continue to the second part of the mizOS installation process:"
-echo "cd /root && chmod 777 installer2 && ./installer2"
+echo -e "\n\nPlease enter the following command to continue to the second part of the mizOS installation process:"
+echo -e "\ncd /root && chmod 777 installer2 && ./installer2\n"
 arch-chroot /mnt
