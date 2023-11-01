@@ -216,6 +216,8 @@ genfstab -U /mnt >> /mnt/etc/fstab
 echo -e "\n\nChanging root to new system."
 # arch-chroot /mnt /bin/bash <<EOF
 cat << EOF > installer2
+#! /bin/lua
+
 -- Timezone selection
 os.execute("clear")
 print("[ Timezone selection ]")
