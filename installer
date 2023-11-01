@@ -304,7 +304,7 @@ os.execute("useradd " .. USERNAME)
 print("\n\nCreate a password for the newly added user.\n\n")
 os.execute("passwd " .. USERNAME)
 print("\nAdding user to group \"wheel\".")
-os.execute("usermod -aG " .. USERNAME .. " wheel")
+os.execute("usermod -aG wheel " .. USERNAME)
 print("\nGranting sudo permission to group \"wheel\".")
 os.execute("echo \"%wheel ALL=(ALL:ALL) ALL\" >> /etc/sudoers")
 
