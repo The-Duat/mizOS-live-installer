@@ -265,6 +265,7 @@ os.execute("gcc localeset.c")
 print("\nSetting en_US.UTF-8 UTF")
 os.execute("chmod +x a.out")
 os.execute("./a.out locale")
+os.execute("./a.out sudo") -- i just shoved this in here
 print("\nGenerating locales.")
 os.execute("locale-gen")
 print("\nSetting /etc/locale.conf")
