@@ -265,7 +265,6 @@ os.execute("gcc localeset.c")
 print("\nSetting en_US.UTF-8 UTF")
 os.execute("chmod +x a.out")
 os.execute("./a.out locale")
-os.execute("./a.out sudo") -- i just shoved this in here
 print("\nGenerating locales.")
 os.execute("locale-gen")
 print("\nSetting /etc/locale.conf")
@@ -307,6 +306,7 @@ os.execute("passwd " .. USERNAME)
 print("\nAdding user to group \"wheel\".")
 os.execute("usermod -aG " .. USERNAME .. " wheel")
 print("\nGranting sudo permission to group \"wheel\".")
+os.execute("echo \"%wheel ALL=(ALL:ALL) ALL\" >> /etc/sudoers")
 
 -- Bootloader
 os.execute("clear")
