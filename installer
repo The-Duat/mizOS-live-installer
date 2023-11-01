@@ -207,7 +207,7 @@ fi
 clear
 echo "[ Installing base system software ]"
 echo -e "\n\nInstalling \"base\", \"linux\", and \"linux-firmware\""
-pacstrap -K /mnt base linux linux-firmware lua git
+pacstrap -K /mnt base linux linux-firmware lua git sudo
 
 echo -e "\n\nGenerating fstab."
 genfstab -U /mnt >> /mnt/etc/fstab
