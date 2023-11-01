@@ -352,7 +352,7 @@ print("[ mizOS System Overwrite ]")
 print("\nA base Arch Linux system has been installed.")
 print("\nIn order to overwrite Arch Linux with mizOS, you need to sign into the non-root user you have created (" .. USERNAME .. ").")
 print("\nPlease enter the password for " .. USERNAME)
-os.execute("mkdir /home/" .. USERNAME .. " && chown -R /home/" .. USERNAME .. " " .. USERNAME .. ":" .. USERNAME .. " && chmod -R 755 /home/" .. USERNAME)
+os.execute("mkdir /home/" .. USERNAME .. " && chown -R " .. USERNAME .. ":" .. USERNAME .. " /home/" .. USERNAME .. " && chmod -R 755 /home/" .. USERNAME)
 os.execute("su " .. USERNAME .. " -c \"cd ~ && mkdir installer && cd installer && git clone https://github.com/the-duat/mizos && cd mizos && sudo chmod +x install && ./install\"")
 
 
