@@ -73,7 +73,7 @@ while true; do
 	echo -e -n "\n\nIs $BOOTPART (/dev/$BOOTPART) correct? (y/n)\n\n> "
 	read ans
 	if [ "$ans" = "y" ]; then
-		echo -e "\nWill you be reformatting this partiton? Reformatting the Boot partition could destroy the bootloaders of other installed operating systems. (y/n)"
+		echo -e "\nWill you be reformatting this partiton? Reformatting the Boot partition could destroy the bootloaders of other installed operating systems. (y/n)\n\n> "
 		read ans
 		if [ "$ans" = "y" ]; then
 			DELBOOT=1
@@ -207,7 +207,7 @@ fi
 clear
 echo "[ Installing base system software ]"
 echo -e "\n\nInstalling \"base\", \"linux\", and \"linux-firmware\""
-pacstrap -K /mnt base linux linux-firmware lua git sudo
+pacstrap -K /mnt base linux linux-firmware lua git sudo grub
 
 echo -e "\n\nGenerating fstab."
 genfstab -U /mnt >> /mnt/etc/fstab
@@ -312,7 +312,7 @@ os.execute("echo \"%wheel ALL=(ALL:ALL) ALL\" >> /etc/sudoers")
 os.execute("clear")
 print("[ Bootloader ]")
 print("\nInstalling GRUB bootloader.\n")
-os.execute("grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB")
+os.execute("grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB" && grub-mkconfig -o /boot/grub/grub.cfg)
 
 -- Graphics Drivers
 os.execute("clear")
