@@ -30,6 +30,8 @@ if [ "$ans" != "y" ]; then
 	echo "Drive disagreement. Installation terminated."
 	exit
 fi
+touch /root/DRIVE
+echo $basedrive >> /root/DRIVE
 clear
 
 echo -e "The mizOS installer will now walk you through partitioning your disk."
@@ -311,8 +313,24 @@ os.execute("echo \"%wheel ALL=(ALL:ALL) ALL\" >> /etc/sudoers")
 -- Bootloader
 os.execute("clear")
 print("[ Bootloader ]")
-print("\nInstalling GRUB bootloader.\n")
-os.execute("grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB && grub-mkconfig -o /boot/grub/grub.cfg")
+print("\nFetching drive.")
+local file = io.open("/root/DRIVE", "r")
+local DRIVE = file:read("*all")
+file:close()
+print("Drive: " .. DRIVE)
+print("\nInstalling GRUB bootloader.")
+print("\nIs your computer set up to use Legacy BIOS or EUFI for booting? (bios/eufi)")
+while true do
+  io.write("\n\n> ")
+  local ans = io.read()
+  if ans == "eufi" then
+    os.execute("grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB && grub-mkconfig -o /boot/grub/grub.cfg")
+    break
+  elseif ans == "bios" then
+    os.execute("grub-install --target=i386-pc /dev/" .. DRIVE .. " && grub-mkconfig -o /boot/grub/grub.cfg")
+    break
+  end
+end
 
 -- Graphics Drivers
 os.execute("clear")
@@ -362,6 +380,7 @@ os.execute("su " .. USERNAME .. " -c \"cd ~ && mkdir installer && cd installer &
 EOF
 
 mv installer2 /mnt/root
+mv /root/DRIVE /mnt/root && chmod 777 /mnt/root/DRIVE
 echo -e "\n\nPlease enter the following command to continue to the second part of the mizOS installation process:"
 echo -e "\ncd /root && chmod 777 installer2 && ./installer2\n"
 arch-chroot /mnt
