@@ -312,7 +312,7 @@ os.execute("echo \"%wheel ALL=(ALL:ALL) ALL\" >> /etc/sudoers")
 os.execute("clear")
 print("[ Bootloader ]")
 print("\nInstalling GRUB bootloader.\n")
-os.execute("grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB" && grub-mkconfig -o /boot/grub/grub.cfg)
+os.execute("grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB && grub-mkconfig -o /boot/grub/grub.cfg")
 
 -- Graphics Drivers
 os.execute("clear")
